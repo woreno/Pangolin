@@ -222,33 +222,34 @@ inline void Var<T>::Init(const std::string& name,
                          double max,
                          int  flags,
                          bool logscale)
-{
-    boost::ptr_unordered_map<std::string,_Var>::iterator vi = vars.find(name);
-    
+{ 
+     boost::ptr_unordered_map<std::string,_Var>::iterator vi = vars.find(name);
+     
     std::vector<std::string> parts;
     boost::split(parts,name,boost::is_any_of("."));
-    
-    
+	
     if( vi != vars.end() )
     {
         // found
         var = vi->second;
         a = Accessor<T>::Create(var->type_name,var->val);
-        if( var->generic && var->type_name != typeid(T).name() )
+		
+	
+        if( var->generic && std::string(var->type_name) != typeid(T).name() )
         {
             // re-specialise this variable
-            //      std::cout << "Specialising " << name << std::endl;
+            //std::cout << "Specialising " << name << std::endl;
             default_value = a->Get();
             
         }else{
             //      // Meta info for variable
-            //      var->meta_full_name = name;
-            //      var->meta_friendly = parts.size() > 0 ? parts[parts.size()-1] : "";
-            //      var->meta_range[0] = min;
-            //      var->meta_range[1] = max;
-            //      var->meta_flags = flags;
-            //      var->logscale = logscale;
-            //      var->meta_gui_changed = false;
+                  var->meta_full_name = name;
+                  var->meta_friendly = parts.size() > 0 ? parts[parts.size()-1] : "";
+                  var->meta_range[0] = min;
+                  var->meta_range[1] = max;
+                  var->meta_flags = flags;
+                  var->logscale = logscale;
+                  var->meta_gui_changed = false;
             
             // notify those watching new variables
             BOOST_FOREACH(NewVarCallback& nvc, new_var_callbacks)
@@ -259,6 +260,7 @@ inline void Var<T>::Init(const std::string& name,
         delete a;
     }
     
+    
     // Create var of base type T
     {
         var = &vars[name];
@@ -267,8 +269,7 @@ inline void Var<T>::Init(const std::string& name,
         const int default_ticks = 5000;
         const double default_increment = range / default_ticks;
         Accessor<T>* da = 0;
-        
-        if( boost::is_same<T,bool>::value ) {
+         if( boost::is_same<T,bool>::value ) {
             var->create(new bool, new bool, typeid(bool).name() );
             a = new _Accessor<T,bool>( *(bool*)var->val );
             da = new _Accessor<T,bool>( *(bool*)var->val_default );
@@ -290,8 +291,7 @@ inline void Var<T>::Init(const std::string& name,
                         );
             a = new _Accessor<T,std::string>( *(std::string*)var->val );
             da = new _Accessor<T,std::string>( *(std::string*)var->val_default );
-        }
-        
+        }        
         a->Set(default_value);
         da->Set(default_value);
         delete da;
@@ -305,7 +305,7 @@ inline void Var<T>::Init(const std::string& name,
         var->generic = false;
         var->logscale = logscale;
         var->meta_gui_changed = false;
-        
+         
         // notify those watching new variables
         BOOST_FOREACH(NewVarCallback& nvc, new_var_callbacks)
                 if( boost::starts_with(name,nvc.filter) )

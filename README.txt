@@ -1,3 +1,26 @@
+== About this fork ==
+
+Pangolin is a work by Steven Lovegrove and Richard Newcombe
+https://github.com/stevenlovegrove.
+This is a short patch to get it working in windows, it may be outdated, and
+GL exceptions will not work.
+
+	*Newer versions of GLEW "interferes" with OpenGL error exceptions,
+		-	gl.h(211) the exception was commented
+	
+	*Corrected the error "terminate called after throwing an instance of 'pangolin::UnknownTypeException' what():  Unknown type in generic container
+	due the string comparasion" 
+		-	vars_internals.h(few places) every comparasion between char* and string
+	was changed 
+ 
+	* Added a missing term
+		- 	timer.h (118) added the QuadPart member to f (the LARGEINTEGER struct).
+			may need reworking for 32bits arch because this struct is
+			accessed by two independly members DWORD32 hi e low.
+	
+Thanks to Steven and Richard.
+
+
 == What is Pangolin ==
 
 Pangolin is a lightweight rapid development library for managing OpenGL

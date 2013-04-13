@@ -208,7 +208,7 @@ inline void _CheckGlDieOnError( const char *sFile, const int nLine )
     if( glError != GL_NO_ERROR ) {
         std::cerr << "OpenGL Error: " << sFile << ":" << nLine << std::endl;
         std::cerr << gluErrorString(glError) << std::endl;
-        exit( -1 );
+      //  exit( -1 );
     }
 }
 
@@ -294,11 +294,12 @@ inline void GlTexture::Reinitialise(GLint w, GLint h, GLint int_format, bool sam
         glDeleteTextures(1,&tid);
     }
     
+	 
     internal_format = int_format;
     width = w;
     height = h;
     
-    glGenTextures(1,&tid);
+    glGenTextures(1,&tid); 
     Bind();
     // GL_LUMINANCE and GL_FLOAT don't seem to actually affect buffer, but some values are required
     // for call to succeed.
